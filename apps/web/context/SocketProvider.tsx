@@ -8,6 +8,7 @@ interface SocketProviderProps {
 
 interface ISocketProvider {
   sendMessage: (msg: string) => any;
+  messages: string[];
 }
 
 const SocketContext = React.createContext<ISocketProvider | null>(null);
@@ -20,6 +21,7 @@ export const useSocket = () => {
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket>();
+  const [messages, setMessages] = useState<string[]>([]);
   const sendMessage: ISocketProvider["sendMessage"] = useCallback(
     (msg) => {
       if (socket) {
@@ -31,7 +33,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
   const onMessageRecieved = useCallback((msg: string) => {
     const { message } = JSON.parse(msg) as { message: string };
-    console.log(message);
+    setMessages((prev) => [...prev, message]);
   }, []);
 
   //whenever this provider gets mounted, it will create a socket connection with backend, and when we close the page, it will get closed due to cleanup function.
@@ -48,7 +50,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ sendMessage }}>
+    <SocketContext.Provider value={{ sendMessage, messages }}>
       {children}
     </SocketContext.Provider>
   );
