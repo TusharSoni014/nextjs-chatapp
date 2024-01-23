@@ -22,7 +22,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket>();
   const sendMessage: ISocketProvider["sendMessage"] = useCallback(
     (msg) => {
-      console.log("sendMessage", msg);
       if (socket) {
         socket.emit("newMessage", { message: msg });
       }
@@ -30,12 +29,20 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     [socket]
   );
 
+  const onMessageRecieved = useCallback((msg: string) => {
+    const { message } = JSON.parse(msg) as { message: string };
+    console.log(message);
+  }, []);
+
   //whenever this provider gets mounted, it will create a socket connection with backend, and when we close the page, it will get closed due to cleanup function.
   useEffect(() => {
     const _socket = io("http://localhost:8000");
+    _socket.on("message", onMessageRecieved);
     setSocket(_socket);
+
     return () => {
       _socket.disconnect();
+      _socket.off("message");
       setSocket(undefined);
     };
   }, []);
