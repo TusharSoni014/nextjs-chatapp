@@ -1,16 +1,21 @@
 "use client";
 import React, { FormEvent, useState } from "react";
+import { useSocket } from "../context/SocketProvider";
 
 export default function MessageSender() {
   const [msgInput, setMessageInut] = useState<string>("");
+  const { sendMessage } = useSocket();
 
   const handleSendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert(msgInput);
+    sendMessage(msgInput);
     setMessageInut("");
   };
   return (
-    <form className="flex gap-2 w-full justify-center items-center max-w-[500px]">
+    <form
+      onSubmit={handleSendMessage}
+      className="flex gap-2 w-full justify-center items-center max-w-[500px]"
+    >
       <input
         className="p-2 rounded bg-slate-950 border-[1px] w-[80%] border-slate-800 outline-none"
         type="text"
