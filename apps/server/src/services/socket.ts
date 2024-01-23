@@ -3,18 +3,18 @@ import { Server } from "socket.io";
 
 //pub = publisher
 const pub = new Redis({
-  host: "redis-23efb408-techandrow-31b9.a.aivencloud.com",
+  host: "REDIS_SERVER_HOST",
   port: 21258,
   username: "default",
-  password: "AVNS_W0iZyPKyh63g1nw7OHB",
+  password: "REDIS_PASSWORD",
 });
 
 //sub = subscriber
 const sub = new Redis({
-  host: "redis-23efb408-techandrow-31b9.a.aivencloud.com",
+  host: "REDIS_SERVER_HOST",
   port: 21258,
   username: "default",
-  password: "AVNS_W0iZyPKyh63g1nw7OHB",
+  password: "REDIS_PASSWORD",
 });
 
 class SocketService {
